@@ -1,6 +1,7 @@
 
 plugins {
     kotlin("jvm") version "2.1.10"
+    alias(libs.plugins.changelog)
 }
 
 group = "org.fioan89"
