@@ -66,7 +66,7 @@ jobs:
       - name: Upload Release Notes
         uses: actions/upload-artifact@v4
         with:
-          name: release_notes
+          name: release-notes
           path: RELEASE_NOTES.md
 
   # Prepare a draft release for GitHub Releases page for the manual verification
@@ -99,8 +99,7 @@ jobs:
       - name: Download Release Notes
         uses: actions/download-artifact@v4
         with:
-          name: release_notes
-          path: RELEASE_NOTES.md
+          name: release-notes
 
       # Create new release draft - which is not publicly visible and requires manual acceptance
       - name: Create Release Draft
