@@ -46,22 +46,12 @@ jobs:
       - name: Run Build
         run: ./gradlew clean pluginZip --info
 
-      # Prepare  archive content for creating artifact
-      - name: Prepare  Artifact
-        id: artifact
-        shell: bash
-        run: |
-          cd ${{ github.workspace }}/build/distributions
-          FILENAME=$(ls *.zip)
-          unzip "$FILENAME" -d content
-          echo "filename=${FILENAME:0:-4}" >> $GITHUB_OUTPUT
-
       # Store already-built  as an artifact for downloading
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.artifact.outputs.filename }}
-          path: ./build/distributions/content/*/*
+          name: zip-artifacts
+          path: ./build/distributions/*.zip
 
       - name: Upload Release Notes
         uses: actions/upload-artifact@v4
@@ -93,7 +83,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ steps.artifact.outputs.filename }}
+          name: zip-artifacts
           path: artifacts/
       - name: Display structure of Zip
         run: ls -R artifacts/
@@ -113,6 +103,6 @@ jobs:
         run: |
           gh release create v${{ needs.build.outputs.version }} \
             --draft artifacts/* \
-           --target-commitish main \
+            --target main \
             --title "v${{ needs.build.outputs.version }}" \
             --notes-file notes/RELEASE_NOTES.md
