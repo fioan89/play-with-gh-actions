@@ -73,7 +73,6 @@ jobs:
   # If accepted and published, release workflow would be triggered
   releaseDraft:
     name: Release Draft
-    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -96,12 +95,16 @@ jobs:
         with:
           name: ${{ steps.artifact.outputs.filename }}
           path: artifacts/
+      - name: Display structure of Zip
+        run: ls -R artifacts/
 
       - name: Download Release Notes
         uses: actions/download-artifact@v4
         with:
           name: release-notes
           path: notes/
+      - name: Display structure of notes
+        run: ls -R notes/
 
       # Create new release draft - which is not publicly visible and requires manual acceptance
       - name: Create Release Draft
@@ -110,6 +113,6 @@ jobs:
         run: |
           gh release create v${{ needs.build.outputs.version }} \
             --draft artifacts/* \
-            --target ${GITHUB_REF_NAME} \
+           --target-commitish main \
             --title "v${{ needs.build.outputs.version }}" \
             --notes-file notes/RELEASE_NOTES.md
