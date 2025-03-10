@@ -40,7 +40,7 @@ jobs:
           CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "name=$NAME" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> RELEASE_NOTES.md
 
       # Run  build
       - name: Run Build
@@ -62,6 +62,12 @@ jobs:
         with:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*
+
+      - name: Upload Release Notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release_notes
+          path: RELEASE_NOTES.md
 
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, release workflow would be triggered
@@ -90,12 +96,17 @@ jobs:
           name: ${{ steps.artifact.outputs.filename }}
           path: artifacts/
 
+      - name: Download Release Notes
+        uses: actions/download-artifact@v4
+        with:
+          name: release_notes
+          path: RELEASE_NOTES.md
+
       # Create new release draft - which is not publicly visible and requires manual acceptance
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "${{ needs.build.outputs.changelog }}" > RELEASE_NOTES.md
           gh release create v${{ needs.build.outputs.version }} \
             --draft artifacts/* \
             --target ${GITHUB_REF_NAME} \
