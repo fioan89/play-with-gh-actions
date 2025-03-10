@@ -40,7 +40,7 @@ jobs:
           CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "name=$NAME" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" > RELEASE_NOTES.md
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
 
       # Run  build
       - name: Run Build
@@ -95,6 +95,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cho "${{ needs.build.outputs.changelog }}" > RELEASE_NOTES.md
           gh release create v${{ needs.build.outputs.version }} \
             --draft artifacts/* \
             --target ${GITHUB_REF_NAME} \
