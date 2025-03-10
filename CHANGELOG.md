@@ -9,4 +9,4 @@
 
 ### Changed
 
-- improved CI pipeline
+- improved CI pipeline with support for release drafts
