@@ -1,0 +1,5 @@
+[versions]
+changelog = "2.2.1"
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
