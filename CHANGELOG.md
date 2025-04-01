@@ -1,6 +1,8 @@
-# GH Actions Playground Changelog
+# Coder Toolbox Plugin Changelog
 
 ## Unreleased
+
+## 1.0-SNAPSHOT - 2025-04-01
 
 ### Added
 
