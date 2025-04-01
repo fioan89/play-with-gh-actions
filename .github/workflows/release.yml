@@ -50,6 +50,9 @@ jobs:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
           ./gradlew patchChangelog --release-note="$CHANGELOG"
+          echo $CHANGELOG
+          echo ">>>     <<<"
+          cat ./CHANGELOG.md
 
       # Publish the plugin to the Marketplace
       # TODO - enable this step (by removing the `if` block) when JetBrains is clear about release procedures
